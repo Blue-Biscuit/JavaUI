@@ -47,7 +47,7 @@ public class Command {
      * @param args The input string used to call the command.
      * @param stream The IO stream used.
      */
-    public void call(String args, PrintStream stream) {
+    public void call(String[] args, PrintStream stream) {
         this.callback.callback(args, stream);
     }
 

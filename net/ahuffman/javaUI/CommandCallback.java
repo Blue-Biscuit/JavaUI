@@ -8,5 +8,5 @@ public interface CommandCallback {
      * @param args The string used to call the command.
      * @param stream The IO stream.
      */
-    public abstract void callback(String args, PrintStream stream);
+    public abstract void callback(String[] args, PrintStream stream);
 }
