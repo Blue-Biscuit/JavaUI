@@ -8,7 +8,7 @@ public class TestMain {
             stream.println("Hello!");
         };
 
-        Command c = new Command("hello", helloCallback, "", "");
+        Command c = new Command("hello", helloCallback, "Prints \"Hello!\" to the output stream.", "This command will print hello to output.\nThis is a long comment.\nThis is soo long!");
 
         UI ui = new UI();
         ui.registerCommand(c);
