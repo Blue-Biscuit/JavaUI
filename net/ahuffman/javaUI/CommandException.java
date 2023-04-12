@@ -5,7 +5,7 @@ package net.ahuffman.javaUI;
  * a "catch-all" exception type for command related
  * runtime exceptions.
  */
-public class CommandException extends RuntimeException {
+public class CommandException extends UIException {
     /**
      * Constructor
      * @param msg The exception message.
