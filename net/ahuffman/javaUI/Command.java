@@ -2,6 +2,8 @@ package net.ahuffman.javaUI;
 
 import java.io.PrintStream;
 
+//TODO: generate exceptions on null input
+
 /**
  * A console UI command.
  */
