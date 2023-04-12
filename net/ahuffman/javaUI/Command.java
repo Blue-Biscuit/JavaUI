@@ -1,5 +1,7 @@
 package net.ahuffman.javaUI;
 
+import java.util.Scanner;
+
 /**
  * A console UI command.
  */
@@ -43,9 +45,10 @@ public class Command {
     /**
      * Calls the command.
      * @param args The input string used to call the command.
+     * @param stream The IO stream used.
      */
-    public void call(String args) {
-        this.callback.callback(args);
+    public void call(String args, Scanner stream) {
+        this.callback.callback(args, stream);
     }
 
     /**
