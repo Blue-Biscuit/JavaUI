@@ -10,7 +10,7 @@ public class UI {
     /**
      * The command list.
      */
-    private final ArrayList<Command> commands;
+    private final ArrayList<Command> commands = new ArrayList<>(DEFAULT_ARR_CAPCITY);
 
     /**
      * A signal to used to determine whether or not an "exit" signal has been given
@@ -24,10 +24,65 @@ public class UI {
     private static final int DEFAULT_ARR_CAPCITY = 50;
 
     /**
-     * Constructor.
+     * The default help callback function, which is used in the absence of one
+     * specified by the options.
+     */
+    private final CommandCallback DEFAULT_HELP_CALLBACK = (args, stream) -> {
+                // If no specific command is provided, print a general list of all
+        // commands.
+
+        if (args.length <= 1) {
+            for (Command c : this.commands) {
+                stream.printf("%-30s%s\n", c.getName(), c.getShortHelpText());
+            }
+        }
+
+        // Otherwise, print the extended help for the command provided.
+
+        else {
+            String commandName = args[1];
+
+            if (commandIsRegistered(commandName)) {
+                Command c = getCommand(commandName);
+
+                stream.println(c.getLongHelpText());
+            }
+            else {
+                stream.println("Command \"" + commandName + "\" not found.");
+            }
+        }
+    };
+
+    /**
+     * The options with which this UI instance was built.
+     */
+    private final UIOptions options;
+
+
+    /**
+     * Default constructor
      */
     public UI() {
-        this.commands = new ArrayList<>(DEFAULT_ARR_CAPCITY);
+        this(new UIOptions());
+    }
+
+    /**
+     * Constructor.
+     * @param options Options which dictate how the UI will function. This is cloned, so future changes to options will not affect the internal
+     * options.
+     */
+    public UI(UIOptions options) {
+        this.options = new UIOptions(options);
+
+        // Create the "help" command, either by using the defaults or
+        // as specified in the options.
+
+        CommandCallback helpCallback = DEFAULT_HELP_CALLBACK;
+        if (options.helpCommandCallback != null) {
+            helpCallback = options.helpCommandCallback;
+        }
+
+        registerCommand(new Command(options.helpCommandName, helpCallback, options.helpCommandHelpTextShort, options.helpCommandHelpTextLong));
     }
 
     /**
@@ -74,7 +129,9 @@ public class UI {
             }
         }
 
-        stream.println(); // So that there is a space between the current prompt and command ouput.
+        if (options.spaceAfterCommandResult) {
+            stream.println(); // So that there is a space between the current prompt and command ouput.
+        }
     }
 
     /**
