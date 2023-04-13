@@ -13,6 +13,12 @@ public class UI {
     private final ArrayList<Command> commands;
 
     /**
+     * A signal to used to determine whether or not an "exit" signal has been given
+     * to this UI.
+     */
+    private boolean running = false;
+
+    /**
      * The default capacity of the command list.
      */
     private static final int DEFAULT_ARR_CAPCITY = 50;
@@ -28,8 +34,15 @@ public class UI {
      * Runs the UI.
      * @param input The user input string.
      * @param stream The output stream.
+     * @throws NotRunningException If the UI has not been started with the start() method.
      */
-    public void run(String input, PrintStream stream) {
+    public void run(String input, PrintStream stream) throws NotRunningException {
+        // If the UI is not running, throw.
+
+        if (!running) {
+            throw new NotRunningException("Attempted to run a command while the UI is not running. Run the start() method first.");
+        }
+
         // TODO: null checks
 
         String[] args = input.split("\\s+");
@@ -49,6 +62,12 @@ public class UI {
             defaultHelpCommand(args, stream);
         }
 
+        // If the command is "exit," kill the UI.
+
+        else if (cmdName.equals("exit")) {
+            running = false;
+        }
+
         // Otherwise, loop through the commands, and call whichever matches
         // the command name.
 
@@ -60,6 +79,8 @@ public class UI {
                 }
             }
         }
+
+        stream.println(); // So that there is a space between the current prompt and command ouput.
     }
 
     /**
@@ -67,8 +88,15 @@ public class UI {
      * @param c The command to register.
      * @throws CommandRegisterException If a command with this name has already been registered,
      * or c is null.
+     * @throws RunningException If the UI has already been started.
      */
-    public void registerCommand(Command c) throws CommandRegisterException {
+    public void registerCommand(Command c) throws CommandRegisterException, RunningException {
+        // If the UI is running, except.
+
+        if (running) {
+            throw new RunningException("Cannot register a command while the UI is running. It should be killed with the stop() method first.");
+        }
+
         // Check if the command is null.
 
         if (c == null) {
@@ -134,6 +162,28 @@ public class UI {
         }
 
         throw new CommandException("Command with name \"" + name + "\" not found among registered commands.");
+    }
+
+    /**
+     * Whether or not the UI has been sent the "exit" command.
+     * @return False if the UI has been sent an exit signal; true otherwise.
+     */
+    public boolean isRunning() {
+        return running;
+    }
+
+    /**
+     * Starts the UI.
+     */
+    public void start() {
+        this.running = true;
+    }
+
+    /**
+     * Stops the UI.
+     */
+    public void stop() {
+        this.running = false;
     }
 
     /**
