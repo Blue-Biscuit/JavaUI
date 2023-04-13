@@ -31,5 +31,6 @@ public class TestMain {
             String input = s.nextLine();
             ui.run(input, System.out);
         }
+        s.close();
     }
 }
