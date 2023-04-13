@@ -62,12 +62,6 @@ public class UI {
             defaultHelpCommand(args, stream);
         }
 
-        // If the command is "exit," kill the UI.
-
-        else if (cmdName.equals("exit")) {
-            running = false;
-        }
-
         // Otherwise, loop through the commands, and call whichever matches
         // the command name.
 

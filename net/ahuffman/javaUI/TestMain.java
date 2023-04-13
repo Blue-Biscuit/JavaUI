@@ -4,11 +4,9 @@ import java.util.Scanner;
 
 public class TestMain {
     public static void main(String[] args) {
-        var working = new Object() {boolean working = true;};
 
         CommandCallback helloCallback = (a, stream) -> {
             stream.println("Hello!");
-            working.working = false;
         };
 
         Command c = new Command("hello", helloCallback, "Prints \"Hello!\" to the output stream.", "This command will print hello to output.\nThis is a long comment.\nThis is soo long!");
@@ -16,6 +14,15 @@ public class TestMain {
         UI ui = new UI();
         ui.registerCommand(c);
         Scanner s = new Scanner(System.in);
+        Command exitCommand = new Command (
+            "exit",
+            (a, stream) -> {
+                ui.stop();
+            },
+            "Exits the program.",
+            "Exits the program."
+        );
+        ui.registerCommand(exitCommand);
 
         ui.start();
         
